@@ -38,4 +38,8 @@ export class OrderService {
     return this.http.post(`${environment.api_url}orders/cancel-order`, data)
   }
 
+  orderCounter(){
+    return this.http.get(`${environment.api_url}orders/order_counter`)
+  }
+
 }

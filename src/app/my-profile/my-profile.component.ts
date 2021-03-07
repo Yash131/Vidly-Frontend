@@ -4,6 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { FileSelectDirective, FileUploader } from "ng2-file-upload";
 import { environment } from "src/environments/environment";
 import { AuthService } from "../services/auth.service";
+import { OrderService } from "../services/order.service";
 import { UserService } from "../services/user.service";
 
 declare var $: any;
@@ -28,17 +29,21 @@ export class MyProfileComponent implements OnInit {
   imageUrl: string | ArrayBuffer;
   attachmentList:any = [];
 
+  orderCounts
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private orderService : OrderService
   ) {
   }
 
   ngOnInit(): void {
     this.getProfileDetails();
     this.initForm();
+
+    this.orderService.orderCounter().subscribe( res => this.orderCounts = res )
   }
 
   getProfileDetails() {
@@ -47,7 +52,7 @@ export class MyProfileComponent implements OnInit {
         this.user = res;
       },
       (e: any) => {
-        console.log(e);
+        // console.log(e);
       }
     );
   }
@@ -59,7 +64,7 @@ export class MyProfileComponent implements OnInit {
 
   photoSelectInput(e: Event) {
     this.selectedFile = (e.target as HTMLInputElement).files[0];
-    console.log(this.selectedFile);
+    // console.log(this.selectedFile);
     // this.profilePhotoUpdateForm.patchValue({
     //   file:  this.selectedFile
     // });
@@ -91,7 +96,7 @@ export class MyProfileComponent implements OnInit {
       address: ["", Validators.required],
     });
     this.profilePhotoUpdateForm = this.fb.group({
-      file: [null, Validators.required],
+      photo: [null, Validators.required],
     });
   }
 
@@ -99,13 +104,13 @@ export class MyProfileComponent implements OnInit {
     if (this.modalEvent == "Password") {
       this.updateUsrPassword();
     } else {
-      console.log(this.modalEvent);
+      // console.log(this.modalEvent);
       this.updateUserInfos();
     }
   }
 
   updateUsrPassword() {
-    console.log(this.passwordUpadeForm.value);
+    // console.log(this.passwordUpadeForm.value);
 
     this.userService.updatePassword(this.passwordUpadeForm.value).subscribe(
       (res: any) => {
@@ -116,7 +121,7 @@ export class MyProfileComponent implements OnInit {
       },
       (e) => {
         $("#profileEdit").modal("hide");
-        console.log(e.error.text);
+        // console.log(e.error.text);
         this.snackBar.open(e.error.text, "Failed", {
           duration: 3000,
         });
@@ -150,17 +155,17 @@ export class MyProfileComponent implements OnInit {
         ? null
         : this.addressUpadeForm.get("address").value,
     };
-    console.log(obj);
+    // console.log(obj);
     this.userService.updateUserInfo(obj).subscribe(
       (res: any) => {
-        console.log(res);
+        // console.log(res);
         this.getProfileDetails();
         this.userService.refreshUserInfo(res);
         this.resetAllForms();
         $("#profileEdit").modal("hide");
       },
       (e: any) => {
-        console.log(e);
+        // console.log(e);
         this.resetAllForms();
         $("#profileEdit").modal("hide");
       }

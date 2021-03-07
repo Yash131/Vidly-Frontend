@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api_url: "https://cryptic-tundra-94474.herokuapp.com/api/"
+  api_url: "http://localhost:3000/api/"
 
 };
 

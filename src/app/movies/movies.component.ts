@@ -84,7 +84,7 @@ export class MoviesComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         );
       } catch (e) {
-        console.error(e);
+        // console.error(e);
       }
   }
 
@@ -99,7 +99,7 @@ export class MoviesComponent implements OnInit, AfterViewInit, OnDestroy {
           this.getMovies();
         },
         (err) => {
-          console.error(err);
+          // console.error(err);
         }
       );
   }
@@ -120,7 +120,7 @@ export class MoviesComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 50);
       },
       (err) => {
-        console.error(err);
+        // console.error(err);
         this.isLoadig = false;
 
       }
