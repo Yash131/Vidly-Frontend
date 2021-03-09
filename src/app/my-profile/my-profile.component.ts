@@ -187,9 +187,9 @@ export class MyProfileComponent implements OnInit {
       this.orderService.orderCounter().subscribe((res: any) => {
         this.orderCounts = res?.data;
         // console.log(this.orderCounts);
-        this.snackBar.open(res?.message, "Success", {
-          duration: 5000,
-        });
+        // this.snackBar.open(res?.message, "Success", {
+        //   duration: 5000,
+        // });
       });
     } catch (e) {
       this.snackBar.open(e?.error?.message, "Failed", {
