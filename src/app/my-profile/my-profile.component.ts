@@ -1,8 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { FileSelectDirective, FileUploader } from "ng2-file-upload";
-import { environment } from "src/environments/environment";
 import { AuthService } from "../services/auth.service";
 import { OrderService } from "../services/order.service";
 import { UserService } from "../services/user.service";
@@ -27,23 +25,26 @@ export class MyProfileComponent implements OnInit {
   addressUpadeForm;
   profilePhotoUpdateForm;
   imageUrl: string | ArrayBuffer;
-  attachmentList:any = [];
+  attachmentList: any = [];
 
-  orderCounts
+  orderCounts;
+  message: string;
+  imagePath: any;
+  imgURL: string | ArrayBuffer;
+  isLoadig: boolean = false;
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private orderService : OrderService
-  ) {
-  }
+    private orderService: OrderService
+  ) {}
 
   ngOnInit(): void {
     this.getProfileDetails();
     this.initForm();
-
-    this.orderService.orderCounter().subscribe( res => this.orderCounts = res )
+    this.orderCountsFn();
+    // console.log(this.orderCounts);
   }
 
   getProfileDetails() {
@@ -179,5 +180,73 @@ export class MyProfileComponent implements OnInit {
     this.emailUpadeForm.reset();
     this.addressUpadeForm.reset();
     this.profilePhotoUpdateForm.reset();
+  }
+
+  orderCountsFn() {
+    try {
+      this.orderService.orderCounter().subscribe((res: any) => {
+        this.orderCounts = res?.data;
+        // console.log(this.orderCounts);
+        this.snackBar.open(res?.message, "Success", {
+          duration: 5000,
+        });
+      });
+    } catch (e) {
+      this.snackBar.open(e?.error?.message, "Failed", {
+        duration: 5000,
+      });
+    }
+  }
+
+  preview(files) {
+    if (files.length === 0) return;
+
+    var mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      this.message = "Only images are supported.";
+      return;
+    }
+    this.selectedFile = files[0];
+    console.log(files[0]);
+    var reader = new FileReader();
+    this.imagePath = files;
+    reader.readAsDataURL(files[0]);
+    reader.onload = (_event) => {
+      this.imgURL = reader.result;
+    };
+  }
+  uploadProfilePic() {
+    this.isLoadig = true;
+    try {
+      if (this.selectedFile) {
+        let formdata : FormData = new FormData()
+        formdata.append('profile', this.selectedFile)
+        console.log(formdata.get('profile'))
+
+        this.userService.profilePicUpload(formdata).subscribe(
+          (res: any) => {
+            this.user = res?.data;
+            this.selectedFile = null;
+            this.imgURL = null;
+            this.userService.refreshUserInfo(this.user);
+            this.isLoadig = false;
+            this.snackBar.open(res?.message, "Success", {
+              duration: 5000,
+            });
+          },
+          (err: any) => {
+            this.isLoadig = false;
+            this.snackBar.open(err, "Failed", {
+              duration: 5000,
+            });
+          }
+        );
+      }
+    } catch (error) {
+      this.isLoadig = false;
+      this.snackBar.open(error, "Failed", {
+        duration: 5000,
+      });
+    }
   }
 }

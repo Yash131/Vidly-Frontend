@@ -1,4 +1,4 @@
-<div class="navContainer">
+<div class="navContainer box_shadow">
   <nav
     id="header"
     class="navbar headers navbar-light"
@@ -192,7 +192,9 @@
               data-toggle="dropdown"
             >
               {{ user.name
-              }}<i class="fa fa-user-circle fa-lg px-1" aria-hidden="true"></i>
+              }}
+              <img *ngIf="user?.photo" [src]="user?.photo" alt="" class="userImg">
+              <i *ngIf="!user?.photo" class="fa fa-user-circle fa-lg px-1" aria-hidden="true"></i>
             </a>
             <div class="dropdown-menu navDropDownMenu">
               <a

@@ -34,20 +34,31 @@ export class OrderComponent implements OnInit {
       (res: any) => {
         this.myOrders = res.data;
 
-        this.myOrders.filter((el: any) => {
-          if (el.orderStatus == "Cancelled") {
-            this.cancelledOrders.push(el);
-          } else {
-            this.liveOrders.push(el);
-          }
+        if(res?.data?.length){
+          this.myOrders.filter((el: any) => {
+            if (el.orderStatus == "Cancelled") {
+              this.cancelledOrders.push(el);
+            } else {
+              this.liveOrders.push(el);
+            }
 
+            this.isLoadig = false;
+
+          });
+        }else{
           this.isLoadig = false;
+          this._snackBar.open(res.message, "Info", {
+            duration: 5000,
+          });
+        }
 
-        });
       },
       (err: any) => {
         this.isLoadig = false;
         // console.error(err);
+        this._snackBar.open(err, "Failed", {
+          duration: 5000,
+        });
       }
     );
   }

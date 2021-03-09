@@ -15,7 +15,7 @@ declare var $: any;
   styleUrls: ["./head-navbar.component.scss"],
 })
 export class HeadNavbarComponent implements OnInit, OnDestroy {
-  user: User;
+  user;
   iswebApp: boolean = true;
   isMobileApp: boolean = false;
   isTablet: boolean = false;
