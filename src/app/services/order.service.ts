@@ -49,4 +49,8 @@ export class OrderService {
   cancel_order_by_id(data){
     return this.http.post(`${environment.api_url}orders/cancel_order_by_id`, data)
   }
+
+  changeOrderStatus(data){
+    return this.http.post(`${environment.api_url}orders/changeOrderStatus`, data)
+  }
 }

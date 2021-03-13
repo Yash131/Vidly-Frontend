@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { MatSnackBar } from "@angular/material";
 import { OrderService } from "src/app/services/order.service";
-
+declare var $:any;
 @Component({
   selector: "app-control-orders",
   templateUrl: "./control-orders.component.html",
@@ -10,6 +11,7 @@ export class ControlOrdersComponent implements OnInit {
   orders: any;
   panelOpenState: boolean = false;
   isLoading: boolean = false;
+  orderData:any = null;
   orderStatus = [
     { status: "Placed", id: "Placed" },
     { status: "Cancelled", id: "Cancelled" },
@@ -17,7 +19,7 @@ export class ControlOrdersComponent implements OnInit {
     { status: "Completed", id: "Completed" },
   ];
   selectedStatus;
-  constructor(private orderServie: OrderService) {}
+  constructor(private orderServie: OrderService, private snackBar : MatSnackBar) {}
 
   ngOnInit(): void {
     this.get_All_live_orders();
@@ -29,6 +31,14 @@ export class ControlOrdersComponent implements OnInit {
       .subscribe((res: any) => {
         console.log(res);
         this.get_All_live_orders();
+        this.snackBar.open(res?.message, "Success",{
+          duration : 5000
+        })
+      },(err: any) => {
+        console.log(err);
+        this.snackBar.open(err, "Failed",{
+          duration : 5000
+        })
       });
   }
 
@@ -46,7 +56,32 @@ export class ControlOrdersComponent implements OnInit {
     );
   }
 
-  changeOrderstat(){
+  changeStatus(status){
+    if(this.orderData){
+      console.log(status)
+      this.orderServie
+      .changeOrderStatus({ orderID: this.orderData?._id, orderStatus : status })
+      .subscribe((res: any) => {
+        console.log(res);
+        $("#changeStatus").modal("hide");
+        this.get_All_live_orders();
+        this.snackBar.open(res?.message, "Success",{
+          duration : 5000
+        })
+        this.orderData = null;
+      },(err: any) => {
+        console.log(err);
+        $("#changeStatus").modal("hide");
+        this.snackBar.open(err, "Failed",{
+          duration : 5000
+        })
+        this.orderData = null;
+      });
+    }
+  }
 
+  orderInfo(order){
+    console.log(order)
+    return this.orderData = order;
   }
 }

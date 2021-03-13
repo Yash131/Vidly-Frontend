@@ -105,3 +105,10 @@ body {
     margin-top: 3px;
     margin-right: 5px;
 }
+
+@media(max-width:567px){
+  .circle{
+    position: absolute !important;
+    left: 9% !important;
+  }
+}
