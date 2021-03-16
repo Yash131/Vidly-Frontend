@@ -13,7 +13,7 @@ export class AdminPanelService {
     return this.httpClient.get(`${environment.api_url}admin_panel/basic_infos`)
   }
 
-  movieQuantityGraph(){
-    return this.httpClient.get(`${environment.api_url}admin_panel/moviequantity_data`)
+  orderPlacedGraph(){
+    return this.httpClient.get(`${environment.api_url}admin_panel/orderChart_data`)
   }
 }

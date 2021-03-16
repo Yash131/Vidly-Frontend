@@ -54,6 +54,7 @@ import { ForgotPassComponent } from "./forgot-pass/forgot-pass.component";
 import { ControlUpcomingMoviesComponent } from "./admin/control-upcoming-movies/control-upcoming-movies.component";
 import { ControlOrdersComponent } from "./admin/control-orders/control-orders.component";
 import { ChartsModule } from 'ng2-charts';
+import { DatePipe } from "@angular/common";
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +106,7 @@ import { ChartsModule } from 'ng2-charts';
     MatExpansionModule,
   ],
   providers: [
+    DatePipe,
     GenresService,
     MoviesService,
     AuthService,
